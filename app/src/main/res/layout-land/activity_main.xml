@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <GridLayout
+        android:id="@+id/operation_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:columnCount="2">
+
+        <Button
+            android:layout_marginBottom="2dp"
+            android:background="@drawable/button_background"
+            android:layout_marginEnd="2dp"
+            android:id="@+id/add_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:layout_marginBottom="2dp"
+            android:background="@drawable/button_background"
+            android:layout_marginStart="2dp"
+            android:id="@+id/sub_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sub"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/add_button"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:layout_marginTop="2dp"
+            android:background="@drawable/button_background"
+            android:layout_marginEnd="2dp"
+            android:id="@+id/mul_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mul"
+            app:layout_constraintStart_toStartOf="@id/add_button"
+            app:layout_constraintTop_toBottomOf="@+id/add_button" />
+
+        <Button
+            android:layout_marginTop="2dp"
+            android:background="@drawable/button_background"
+            android:layout_marginStart="2dp"
+            android:id="@+id/div_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/div"
+            app:layout_constraintStart_toStartOf="@id/sub_button"
+            app:layout_constraintTop_toBottomOf="@+id/sub_button" />
+
+    </GridLayout>
+
+    <LinearLayout
+        android:id="@+id/result_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="2dp">
+
+
+        <TextView
+            android:id="@+id/resultTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:background="@drawable/button_background"
+            android:id="@+id/reset_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reset" />
+
+    </LinearLayout>
+</FrameLayout>
