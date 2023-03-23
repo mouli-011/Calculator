@@ -101,4 +101,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    override fun onBackPressed() {
+        if(viewChanged){
+            startingScreen()
+        }
+        else{
+            finish()
+        }
+    }
 }
