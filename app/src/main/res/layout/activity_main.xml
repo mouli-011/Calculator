@@ -7,44 +7,36 @@
         android:id="@+id/operation_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="20dp"
         android:gravity="center"
-        android:orientation="vertical"
-        android:layout_marginBottom="20dp">
+        android:orientation="vertical">
 
         <Button
+            android:id="@+id/add_button"
+            style="@style/BorderedButton"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
-            android:background="@drawable/button_background"
-            android:id="@+id/add_button"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
             android:text="@string/add" />
 
         <Button
+            android:id="@+id/sub_button"
+            style="@style/BorderedButton"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
-            android:background="@drawable/button_background"
-            android:id="@+id/sub_button"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
             android:text="@string/sub" />
 
         <Button
+            android:id="@+id/mul_button"
+            style="@style/BorderedButton"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
-            android:background="@drawable/button_background"
-            android:id="@+id/mul_button"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
             android:text="@string/mul" />
 
         <Button
+            android:id="@+id/div_button"
+            style="@style/BorderedButton"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
-            android:background="@drawable/button_background"
-            android:id="@+id/div_button"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
             android:text="@string/div" />
 
     </LinearLayout>
@@ -61,14 +53,12 @@
             android:id="@+id/resultTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"/>
+            android:layout_marginBottom="20dp" />
 
         <Button
-            android:layout_marginTop="20dp"
-            android:background="@drawable/button_background"
             android:id="@+id/reset_button"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
+            style="@style/BorderedButton"
+            android:layout_marginTop="20dp"
             android:text="@string/reset" />
 
     </LinearLayout>

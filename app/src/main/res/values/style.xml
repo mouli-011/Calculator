@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="BorderedButton" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/button_background</item>
+        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_height">50dp</item>
+    </style>
+
+    <style name="BorderedEditText" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@drawable/edit_text_border</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:inputType">number</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+</resources>
+

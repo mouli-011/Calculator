@@ -8,16 +8,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/operation_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:columnCount="2">
+        android:layout_height="match_parent">
 
         <Button
             android:id="@+id/add_button"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
+            style="@style/BorderedButton"
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="20dp"
-            android:background="@drawable/button_background"
             android:text="@string/add"
             app:layout_constraintBottom_toTopOf="@id/mul_button"
             app:layout_constraintEnd_toStartOf="@id/sub_button"
@@ -28,11 +25,9 @@
 
         <Button
             android:id="@+id/sub_button"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
+            style="@style/BorderedButton"
             android:layout_marginStart="20dp"
             android:layout_marginBottom="20dp"
-            android:background="@drawable/button_background"
             android:text="@string/sub"
             app:layout_constraintBaseline_toBaselineOf="@id/add_button"
             app:layout_constraintEnd_toEndOf="parent"
@@ -40,11 +35,9 @@
 
         <Button
             android:id="@+id/mul_button"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
+            style="@style/BorderedButton"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
-            android:background="@drawable/button_background"
             android:text="@string/mul"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/div_button"
@@ -54,12 +47,10 @@
 
         <Button
             android:id="@+id/div_button"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
+            style="@style/BorderedButton"
             android:layout_marginStart="20dp"
-            android:background="@drawable/button_background"
-            android:text="@string/div"
             android:layout_marginTop="20dp"
+            android:text="@string/div"
             app:layout_constraintBaseline_toBaselineOf="@id/mul_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/mul_button" />
@@ -84,11 +75,9 @@
 
         <Button
             android:id="@+id/reset_button"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
-            android:background="@drawable/button_background"
-            android:text="@string/reset"
-            android:layout_marginTop="10dp"/>
+            style="@style/BorderedButton"
+            android:layout_marginTop="10dp"
+            android:text="@string/reset" />
 
     </LinearLayout>
 </FrameLayout>

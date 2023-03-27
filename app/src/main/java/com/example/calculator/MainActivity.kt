@@ -5,23 +5,51 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.View.OnClickListener
-import androidx.lifecycle.ViewModelProvider
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.calculator.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-    private var operation: String = ""
+    private var number1 = 0
+    private var number2 = 0
+    private var result = 0
+    private var operation = R.string.empty_string.toString()
     private var viewChanged = false
     private lateinit var binding: ActivityMainBinding
-    private lateinit var viewModel: MainActivityViewModel
+    private val activityBLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ activityResult ->
+        if(activityResult.resultCode == RESULT_OK){
+            val resultIntent: Intent? = activityResult.data
+            resultIntent?.let {
+                number1 = it.getIntExtra(getString(R.string.number1), 0)
+                number2 = it.getIntExtra(getString(R.string.number2), 0)
+                result = it.getIntExtra(getString(R.string.result), 0)
+                operation = it.getStringExtra(getString(R.string.operation)).toString()
+                displayResult(operation)
+            } ?: startingScreen()
+        }
+    }
+    private lateinit var onBackPressedCallback: OnBackPressedCallback
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         if (savedInstanceState != null) {
-            operation = savedInstanceState.getString("operation").toString()
-            viewChanged = savedInstanceState.getBoolean("viewChanged")
+            number1 = savedInstanceState.getInt(getString(R.string.number1))
+            number2 = savedInstanceState.getInt(getString(R.string.number2))
+            result = savedInstanceState.getInt(getString(R.string.result))
+            operation = savedInstanceState.getString(getString(R.string.operation)).toString()
+            viewChanged = savedInstanceState.getBoolean(getString(R.string.view_changed))
         }
-        viewModel = ViewModelProvider(this)[MainActivityViewModel::class.java]
+        onBackPressedCallback = object: OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                if (viewChanged) {
+                    startingScreen()
+                } else {
+                    finish()
+                }
+            }
+        }
+        onBackPressedDispatcher.addCallback(this,onBackPressedCallback)
         if (!viewChanged)
             startingScreen()
         else
@@ -30,8 +58,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString("operation", operation)
-        outState.putBoolean("viewChanged", viewChanged)
+        outState.putString(getString(R.string.operation), operation)
+        outState.putBoolean(getString(R.string.view_changed), viewChanged)
+        outState.putInt(getString(R.string.number1), number1)
+        outState.putInt(getString(R.string.number2), number2)
+        outState.putInt(getString(R.string.result), result)
     }
 
     private fun startingScreen() {
@@ -46,25 +77,21 @@ class MainActivity : AppCompatActivity() {
     private fun setListeners() {
         val getInputIntent = Intent(this, ActivityB::class.java)
         val listener = OnClickListener {
-        operation = when(it){
+            when (it) {
                 binding.addButton -> {
-                    getInputIntent.putExtra("OPERATION", OPERATIONS.ADD.string)
-                    "+"
+                    getInputIntent.putExtra(getString(R.string.operation), getString(R.string.add))
                 }
                 binding.subButton -> {
-                    getInputIntent.putExtra("OPERATION", OPERATIONS.SUB.string)
-                    "-"
+                    getInputIntent.putExtra(getString(R.string.operation), getString(R.string.sub))
                 }
                 binding.mulButton -> {
-                    getInputIntent.putExtra("OPERATION", OPERATIONS.MUL.string)
-                    "*"
+                    getInputIntent.putExtra(getString(R.string.operation), getString(R.string.mul))
                 }
                 else -> {
-                    getInputIntent.putExtra("OPERATION", OPERATIONS.DIV.string)
-                    "/"
+                    getInputIntent.putExtra(getString(R.string.operation), getString(R.string.div))
                 }
-        }
-            startActivityForResult(getInputIntent, 1)
+            }
+            activityBLauncher.launch(getInputIntent)
         }
         binding.addButton.setOnClickListener(listener)
         binding.subButton.setOnClickListener(listener)
@@ -78,36 +105,15 @@ class MainActivity : AppCompatActivity() {
             operationLayout.visibility = View.GONE
             resultLayout.visibility = View.VISIBLE
             with(resultTextView) {
-                val resultText =
-                    "${viewModel.number1} $operation ${viewModel.number2} is ${viewModel.result}"
-                text = resultText
+                text = getString(R.string.result_string, number1, operation, number2, result)
             }
             resetButton.setOnClickListener {
                 startingScreen()
             }
         }
     }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 1) {
-            if (resultCode == RESULT_OK) {
-                data?.let {
-                    viewModel.number1 = it.getIntExtra("a", 0)
-                    viewModel.number2 = it.getIntExtra("b", 0)
-                    viewModel.result = it.getIntExtra("result", 0)
-                    displayResult(operation)
-                } ?: startingScreen()
-            }
-        }
-    }
-
-    override fun onBackPressed() {
-        if(viewChanged){
-            startingScreen()
-        }
-        else{
-            finish()
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+        onBackPressedCallback.remove()
     }
 }

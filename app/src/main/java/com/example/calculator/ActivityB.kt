@@ -18,7 +18,7 @@ class ActivityB : AppCompatActivity() {
             val editText1: EditText = findViewById(R.id.number1_edit_text)
             val editText2: EditText = findViewById(R.id.number2_edit_text)
             if(editText1.text.isEmpty()||editText2.text.isEmpty()){
-                Toast.makeText(this,"Numbers Should Not Be Empty",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this,R.string.edit_text_empty_message,Toast.LENGTH_SHORT).show()
             }
             else{
                 returnResult(operation,editText1,editText2)
@@ -27,46 +27,52 @@ class ActivityB : AppCompatActivity() {
     }
     private fun returnResult(operations: String,editText1: EditText,editText2: EditText){
         val resultIntent = Intent()
-        val a = editText1.text.toString().toInt()
-        val b = editText2.text.toString().toInt()
+        val number1 = editText1.text.toString().toInt()
+        val number2 = editText2.text.toString().toInt()
         val result = when(operations){
-            OPERATIONS.ADD.string -> {
-                a+b
+            getString(R.string.add) -> {
+                number1+number2
             }
-            OPERATIONS.SUB.string -> {
-                a-b
+           getString(R.string.sub) -> {
+                number1-number2
             }
-            OPERATIONS.MUL.string -> {
-                a*b
+            getString(R.string.mul) -> {
+                number1*number2
             }
             else -> {
-                a/b
+                number1/number2
             }
         }
-        resultIntent.putExtra("a",a)
-        resultIntent.putExtra("b",b)
-        resultIntent.putExtra("result",result)
+        resultIntent.putExtra(getString(R.string.number1),number1)
+        resultIntent.putExtra(getString(R.string.number2),number2)
+        resultIntent.putExtra(getString(R.string.result),result)
+        resultIntent.putExtra(getString(R.string.operation),when(operations){
+            getString(R.string.add) -> getString(R.string.plus)
+            getString(R.string.sub) -> getString(R.string.minus)
+            getString(R.string.mul) -> getString(R.string.asterisk)
+            else -> getString(R.string.slash)
+        })
         setResult(RESULT_OK,resultIntent)
         finish()
     }
     private fun setTextForButton(extras: Bundle?): String{
         val operationButton: Button = findViewById(R.id.operation_button)
-        return when(extras?.getString("OPERATION")){
-            OPERATIONS.ADD.string -> {
-                operationButton.text = OPERATIONS.ADD.string
-                OPERATIONS.ADD.string
+        return when(extras?.getString(getString(R.string.operation))){
+            getString(R.string.add) -> {
+                operationButton.text = getString(R.string.add)
+                getString(R.string.add)
             }
-            OPERATIONS.SUB.string -> {
-                operationButton.text = OPERATIONS.SUB.string
-                OPERATIONS.SUB.string
+            getString(R.string.sub) -> {
+                operationButton.text = getString(R.string.sub)
+                getString(R.string.sub)
             }
-            OPERATIONS.MUL.string -> {
-                operationButton.text = OPERATIONS.MUL.string
-                OPERATIONS.MUL.string
+            getString(R.string.mul) -> {
+                operationButton.text = getString(R.string.mul)
+                getString(R.string.mul)
             }
             else -> {
-                operationButton.text = OPERATIONS.DIV.string
-                OPERATIONS.DIV.string
+                operationButton.text = getString(R.string.div)
+                R.string.div.toString()
             }
         }
     }
