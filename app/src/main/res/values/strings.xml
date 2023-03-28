@@ -10,12 +10,9 @@
     <string name="minus">-</string>
     <string name="slash">/</string>
     <string name="asterisk">*</string>
-    <string name="number1">number1</string>
-    <string name="number2">number2</string>
-    <string name="result">result</string>
-    <string name="operation">operation</string>
     <string name="empty_string"> </string>
-    <string name="view_changed">viewChanged</string>
     <string name="edit_text_empty_message">Input Should Not Be Empty</string>
     <string name="result_string">%1d %2s %3d = %4d</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
