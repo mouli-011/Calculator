@@ -11,10 +11,7 @@ import com.example.calculator.databinding.FragmentMainBinding
 import constants.Constants
 
 class MainFragment : Fragment() {
-    private var number1 = 0
-    private var number2 = 0
-    private var result = 0
-    private var operation = R.string.empty_string.toString()
+    private var resultString = R.string.empty_string.toString()
     private var viewChanged = false
     private lateinit var binding: FragmentMainBinding
     private lateinit var onBackPressedCallback: OnBackPressedCallback
@@ -23,13 +20,10 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         if (savedInstanceState != null) {
-            number1 = savedInstanceState.getInt(Constants.NUMBER1.name)
-            number2 = savedInstanceState.getInt(Constants.NUMBER2.name)
-            result = savedInstanceState.getInt(Constants.RESULT.name)
-            operation = savedInstanceState.getString(Constants.OPERATION.name).toString()
+            resultString = savedInstanceState.getString(Constants.RESULT.name).toString()
             viewChanged = savedInstanceState.getBoolean(Constants.VIEWCHANGED.name)
         }
-        onBackPressedCallback = object: OnBackPressedCallback(true){
+        onBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (viewChanged) {
                     startingScreen()
@@ -38,22 +32,23 @@ class MainFragment : Fragment() {
                 }
             }
         }
-        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner,onBackPressedCallback)
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, onBackPressedCallback)
         val fragmentManager = parentFragmentManager
-        fragmentManager.setFragmentResultListener(Constants.RESULT.name,this){ _, fragmentResult ->
-            number1 = fragmentResult.getInt(Constants.NUMBER1.name)
-            number2 = fragmentResult.getInt(Constants.NUMBER2.name)
-            result = fragmentResult.getInt(Constants.RESULT.name)
-            operation = fragmentResult.getString(Constants.OPERATION.name).toString()
-            displayResult(operation)
+        fragmentManager.setFragmentResultListener(
+            Constants.RESULT.name,
+            this
+        ) { _, fragmentResult ->
+            resultString = fragmentResult.getString(Constants.RESULT.name).toString()
+            displayResult(resultString)
         }
         binding = FragmentMainBinding.inflate(inflater)
         if (!viewChanged)
             startingScreen()
         else
-            displayResult(operation)
+            displayResult(resultString)
         return binding.root
     }
+
     private fun startingScreen() {
         viewChanged = false
         with(binding) {
@@ -69,13 +64,25 @@ class MainFragment : Fragment() {
             val fragmentTransaction = fragmentManager.beginTransaction()
             val operationSelected = Bundle()
             when (it) {
-                binding.addButton -> operationSelected.putString(Constants.OPERATION.name,getString(R.string.add))
-                binding.subButton -> operationSelected.putString(Constants.OPERATION.name,getString(R.string.sub))
-                binding.mulButton -> operationSelected.putString(Constants.OPERATION.name,getString(R.string.mul))
-                binding.divButton -> operationSelected.putString(Constants.OPERATION.name,getString(R.string.div))
+                binding.addButton -> operationSelected.putString(
+                    Constants.OPERATION.name,
+                    getString(R.string.add)
+                )
+                binding.subButton -> operationSelected.putString(
+                    Constants.OPERATION.name,
+                    getString(R.string.sub)
+                )
+                binding.mulButton -> operationSelected.putString(
+                    Constants.OPERATION.name,
+                    getString(R.string.mul)
+                )
+                binding.divButton -> operationSelected.putString(
+                    Constants.OPERATION.name,
+                    getString(R.string.div)
+                )
             }
             fragmentManager.setFragmentResult(Constants.OPERATION.name, operationSelected)
-            fragmentTransaction.replace(R.id.fragment_holder,OperationFragment())
+            fragmentTransaction.replace(R.id.fragment_holder, OperationFragment())
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commit()
         }
@@ -86,29 +93,24 @@ class MainFragment : Fragment() {
             divButton.setOnClickListener(listener)
         }
     }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(Constants.OPERATION.name, operation)
         outState.putBoolean(Constants.VIEWCHANGED.name, viewChanged)
-        outState.putInt(Constants.NUMBER1.name, number1)
-        outState.putInt(Constants.NUMBER2.name, number2)
-        outState.putInt(Constants.RESULT.name, result)
+        outState.putString(Constants.RESULT.name, resultString)
     }
-    private fun displayResult(operation: String) {
+
+    private fun displayResult(resultString: String) {
         viewChanged = true
         with(binding) {
             operationLayout.visibility = View.GONE
             resultLayout.visibility = View.VISIBLE
             with(resultTextView) {
-                text = getString(R.string.result_string, number1, operation, number2, result)
+                text = resultString
             }
             resetButton.setOnClickListener {
                 startingScreen()
             }
         }
-    }
-    override fun onDestroy() {
-        super.onDestroy()
-        onBackPressedCallback.remove()
     }
 }

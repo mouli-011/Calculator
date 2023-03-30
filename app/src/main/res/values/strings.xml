@@ -12,7 +12,7 @@
     <string name="asterisk">*</string>
     <string name="empty_string"> </string>
     <string name="edit_text_empty_message">Input Should Not Be Empty</string>
-    <string name="result_string">%1d %2s %3d = %4d</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="result_string">%1d %2s %3d = %4s</string>
+    <string name="undefined">Undefined</string>
+    <string name="non_zero_alert">Anything divided by zero is undefined</string>
 </resources>

@@ -1,8 +1,6 @@
 package constants
 
-enum class Constants{
-    NUMBER1,
-    NUMBER2,
+enum class Constants {
     RESULT,
     OPERATION,
     VIEWCHANGED,
