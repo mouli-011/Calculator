@@ -1,5 +1,6 @@
 package com.example.calculator
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,7 +12,6 @@ import com.example.calculator.databinding.FragmentMainBinding
 import constants.Constants
 
 class MainFragment : Fragment() {
-    private var resultString = R.string.empty_string.toString()
     private var viewChanged = false
     private lateinit var binding: FragmentMainBinding
     private lateinit var onBackPressedCallback: OnBackPressedCallback
@@ -19,8 +19,10 @@ class MainFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        binding = FragmentMainBinding.inflate(inflater)
         if (savedInstanceState != null) {
-            resultString = savedInstanceState.getString(Constants.RESULT.name).toString()
+            binding.resultTextView.text =
+                savedInstanceState.getString(Constants.RESULT.name).toString()
             viewChanged = savedInstanceState.getBoolean(Constants.VIEWCHANGED.name)
         }
         onBackPressedCallback = object : OnBackPressedCallback(true) {
@@ -38,14 +40,12 @@ class MainFragment : Fragment() {
             Constants.RESULT.name,
             this
         ) { _, fragmentResult ->
-            resultString = fragmentResult.getString(Constants.RESULT.name).toString()
-            displayResult(resultString)
+            displayResult(fragmentResult.getString(Constants.RESULT.name).toString())
         }
-        binding = FragmentMainBinding.inflate(inflater)
         if (!viewChanged)
             startingScreen()
         else
-            displayResult(resultString)
+            displayResult(binding.resultTextView.text.toString())
         return binding.root
     }
 
@@ -59,9 +59,7 @@ class MainFragment : Fragment() {
     }
 
     private fun setListeners() {
-        val fragmentManager = parentFragmentManager
         val listener = OnClickListener {
-            val fragmentTransaction = fragmentManager.beginTransaction()
             val operationSelected = Bundle()
             when (it) {
                 binding.addButton -> operationSelected.putString(
@@ -81,10 +79,12 @@ class MainFragment : Fragment() {
                     getString(R.string.div)
                 )
             }
-            fragmentManager.setFragmentResult(Constants.OPERATION.name, operationSelected)
-            fragmentTransaction.replace(R.id.fragment_holder, OperationFragment())
-            fragmentTransaction.addToBackStack(null)
-            fragmentTransaction.commit()
+            if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                replaceFragment(operationSelected, R.id.fragment_holder, OperationFragment())
+            }
+            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                replaceFragment(operationSelected, R.id.fragment_b_container, OperationFragment())
+            }
         }
         with(binding) {
             addButton.setOnClickListener(listener)
@@ -97,7 +97,20 @@ class MainFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean(Constants.VIEWCHANGED.name, viewChanged)
-        outState.putString(Constants.RESULT.name, resultString)
+        if (this::binding.isInitialized) {
+            outState.putString(Constants.RESULT.name, binding.resultTextView.text.toString())
+        }
+    }
+
+    private fun replaceFragment(operationSelected: Bundle, container: Int, fragment: Fragment) {
+        val fragmentManager = parentFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragment.arguments = operationSelected
+        fragmentTransaction.replace(container, fragment)
+        if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            fragmentTransaction.addToBackStack(null)
+        }
+        fragmentTransaction.commit()
     }
 
     private fun displayResult(resultString: String) {

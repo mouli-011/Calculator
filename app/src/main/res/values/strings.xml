@@ -15,4 +15,5 @@
     <string name="result_string">%1d %2s %3d = %4s</string>
     <string name="undefined">Undefined</string>
     <string name="non_zero_alert">Anything divided by zero is undefined</string>
+    <string name="alphabet_error">Enter Numbers Only</string>
 </resources>
