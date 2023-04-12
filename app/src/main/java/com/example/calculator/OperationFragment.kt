@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -28,6 +29,10 @@ class OperationFragment : Fragment() {
         }
         arguments = Bundle()
         operation = binding.operationButton.text.toString()
+        if (binding.operationButton.text == getString(R.string.empty_string)) {
+            binding.number1EditText.makeInaccessible()
+            binding.number2EditText.makeInaccessible()
+        }
         val fragmentManager = parentFragmentManager
         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             if (binding.operationButton.text == getString(R.string.empty_string)) {
@@ -126,6 +131,14 @@ class OperationFragment : Fragment() {
                         result.putString(Constants.RESULT.name, resultString)
                         fragmentManager.setFragmentResult(Constants.RESULT.name, result)
                         binding.operationButton.text = getString(R.string.empty_string)
+                        with(binding.number1EditText) {
+                            text.clear()
+                            makeInaccessible()
+                        }
+                        with(binding.number2EditText) {
+                            text.clear()
+                            makeInaccessible()
+                        }
                         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                             val operationFragment =
                                 fragmentManager.findFragmentById(R.id.fragment_b_container)
@@ -228,4 +241,8 @@ class OperationFragment : Fragment() {
         else -> false
     }
 
+    private fun EditText.makeInaccessible() {
+        isClickable = false
+        isFocusable = false
+    }
 }
