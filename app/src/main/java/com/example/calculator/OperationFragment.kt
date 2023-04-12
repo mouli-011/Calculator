@@ -2,71 +2,107 @@ package com.example.calculator
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.text.Editable
 import constants.Constants
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import com.example.calculator.databinding.FragmentOperationBinding
 
 class OperationFragment : Fragment() {
     private var operation: String = R.string.empty_string.toString()
     private lateinit var binding: FragmentOperationBinding
     private val zeroInDouble = 0E308
-
+    private lateinit var onBackPressedCallback: OnBackPressedCallback
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val fragmentManager = parentFragmentManager
         binding = FragmentOperationBinding.inflate(inflater)
-        if (savedInstanceState != null) {
-            operation = savedInstanceState.getString(Constants.OPERATION.name).toString()
-            binding.operationButton.text = operation
-            val fragmentTransaction = fragmentManager.beginTransaction()
-            if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                if (fragmentManager.backStackEntryCount == 0) {
-                    fragmentTransaction.remove(this)
-                    fragmentTransaction.commit()
-                    val operationFragmentTransaction = fragmentManager.beginTransaction()
-                    val operationFragment = OperationFragment()
-                    operationFragment.arguments = arguments
-                    operationFragmentTransaction.replace(R.id.fragment_holder, operationFragment)
-                    operationFragmentTransaction.addToBackStack(null)
-                    operationFragmentTransaction.commit()
-                }
-            }
-            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                if (fragmentManager.backStackEntryCount != 0) {
-                    fragmentManager.popBackStack()
-                    fragmentTransaction.commit()
-                    val operationFragmentTransaction = fragmentManager.beginTransaction()
-                    val operationFragment = OperationFragment()
-                    operationFragment.arguments = arguments
-                    operationFragmentTransaction.replace(
-                        R.id.fragment_b_container,
-                        operationFragment
-                    )
-                    operationFragmentTransaction.commit()
-                }
-            }
-        }
-        binding.operationButton.text = arguments?.getString(Constants.OPERATION.name).toString()
-        arguments?.getString(Constants.EDITTEXT1.name)?.let {
-            val editableText = Editable.Factory.getInstance().newEditable(it)
-            binding.number1EditText.text = editableText
-        }
-        arguments?.getString(Constants.EDITTEXT2.name)?.let {
-            val editableText = Editable.Factory.getInstance().newEditable(it)
-            binding.number2EditText.text = editableText
+        arguments?.getString(Constants.OPERATION.name)?.let {
+            binding.operationButton.text = arguments?.getString(Constants.OPERATION.name).toString()
         }
         arguments = Bundle()
         operation = binding.operationButton.text.toString()
+        val fragmentManager = parentFragmentManager
+        if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            if (binding.operationButton.text == getString(R.string.empty_string)) {
+                val operationFragment = fragmentManager.findFragmentById(R.id.fragment_b_container)
+                if (operationFragment != null) {
+                    val fragmentTransaction = fragmentManager.beginTransaction()
+                    fragmentTransaction.detach(operationFragment)
+                    fragmentTransaction.commit()
+                }
+                activity?.let {
+                    val fragmentBContainer: FrameLayout =
+                        activity?.findViewById(R.id.fragment_b_container)!!
+                    val fragmentBLayoutParams =
+                        fragmentBContainer.layoutParams as LinearLayout.LayoutParams
+                    val fragmentAContainer: FrameLayout =
+                        activity?.findViewById(R.id.fragment_a_container)!!
+                    val fragmentALayoutParams =
+                        fragmentAContainer.layoutParams as LinearLayout.LayoutParams
+                    fragmentALayoutParams.weight = 1f
+                    fragmentBLayoutParams.weight = 0f
+                    fragmentAContainer.layoutParams = fragmentALayoutParams
+                    fragmentBContainer.layoutParams = fragmentBLayoutParams
+                }
+            } else {
+                activity?.let {
+                    val fragmentBContainer: FrameLayout =
+                        activity?.findViewById(R.id.fragment_b_container)!!
+                    val fragmentBLayoutParams =
+                        fragmentBContainer.layoutParams as LinearLayout.LayoutParams
+                    val fragmentAContainer: FrameLayout =
+                        activity?.findViewById(R.id.fragment_a_container)!!
+                    val fragmentALayoutParams =
+                        fragmentAContainer.layoutParams as LinearLayout.LayoutParams
+                    fragmentALayoutParams.weight = 0f
+                    fragmentBLayoutParams.weight = 1f
+                    fragmentAContainer.layoutParams = fragmentALayoutParams
+                    fragmentBContainer.layoutParams = fragmentBLayoutParams
+                }
+            }
+        }
+        if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            onBackPressedCallback = object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    val operationFragment =
+                        fragmentManager.findFragmentById(R.id.fragment_b_container)
+                    if (operationFragment != null) {
+                        val fragmentTransaction = fragmentManager.beginTransaction()
+                        fragmentTransaction.detach(operationFragment)
+                        fragmentTransaction.commit()
+                    }
+                    binding.operationButton.text = getString(R.string.empty_string)
+                    activity?.let {
+                        val fragmentBContainer: FrameLayout =
+                            activity?.findViewById(R.id.fragment_b_container)!!
+                        val fragmentBLayoutParams =
+                            fragmentBContainer.layoutParams as LinearLayout.LayoutParams
+                        val fragmentAContainer: FrameLayout =
+                            activity?.findViewById(R.id.fragment_a_container)!!
+                        val fragmentALayoutParams =
+                            fragmentAContainer.layoutParams as LinearLayout.LayoutParams
+                        fragmentALayoutParams.weight = 1f
+                        fragmentBLayoutParams.weight = 0f
+                        fragmentAContainer.layoutParams = fragmentALayoutParams
+                        fragmentBContainer.layoutParams = fragmentBLayoutParams
+                    }
+                }
+            }
+            activity?.onBackPressedDispatcher?.addCallback(
+                viewLifecycleOwner,
+                onBackPressedCallback
+            )
+        }
         binding.operationButton.setOnClickListener {
-            if ((!(binding.number1EditText.text.isEmpty() || binding.number2EditText.text.isEmpty()))) {
-                if (isNumber(binding.number1EditText.text.toString()) && isNumber(binding.number2EditText.text.toString())) {
+            if (binding.operationButton.text != getString(R.string.empty_string)) {
+                if ((!(binding.number1EditText.text.isEmpty() || binding.number2EditText.text.isEmpty()))) {
                     if (!(binding.number2EditText.text.toString()
                             .toDouble() == 0.0 && binding.operationButton.text.toString() == getString(
                             R.string.div
@@ -75,7 +111,6 @@ class OperationFragment : Fragment() {
                         val number1 = binding.number1EditText.text.toString().toDouble()
                         val number2 = binding.number2EditText.text.toString().toDouble()
                         val result = Bundle()
-                        val operationFragmentTransaction = fragmentManager.beginTransaction()
                         val resultString = getString(
                             R.string.result_string,
                             number1.toLong(),
@@ -89,23 +124,41 @@ class OperationFragment : Fragment() {
                             operation(number1, number2, operation)
                         )
                         result.putString(Constants.RESULT.name, resultString)
-
+                        fragmentManager.setFragmentResult(Constants.RESULT.name, result)
+                        binding.operationButton.text = getString(R.string.empty_string)
                         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                            fragmentManager.setFragmentResult(Constants.RESULT.name, result)
-                            fragmentManager.popBackStack()
-                        } else {
-                            fragmentManager.setFragmentResult(Constants.RESULT.name, result)
-                            operationFragmentTransaction.remove(this)
+                            val operationFragment =
+                                fragmentManager.findFragmentById(R.id.fragment_b_container)
+                            if (operationFragment != null) {
+                                val fragmentTransaction = fragmentManager.beginTransaction()
+                                fragmentTransaction.detach(operationFragment)
+                                fragmentTransaction.commit()
+                            }
+                            activity?.let {
+                                val fragmentBContainer: FrameLayout =
+                                    activity?.findViewById(R.id.fragment_b_container)!!
+                                val fragmentBLayoutParams =
+                                    fragmentBContainer.layoutParams as LinearLayout.LayoutParams
+                                val fragmentAContainer: FrameLayout =
+                                    activity?.findViewById(R.id.fragment_a_container)!!
+                                val fragmentALayoutParams =
+                                    fragmentAContainer.layoutParams as LinearLayout.LayoutParams
+                                fragmentALayoutParams.weight = 1f
+                                fragmentBLayoutParams.weight = 0f
+                                fragmentAContainer.layoutParams = fragmentALayoutParams
+                                fragmentBContainer.layoutParams = fragmentBLayoutParams
+                            }
                         }
-                        operationFragmentTransaction.commit()
                     } else {
                         Toast.makeText(context, R.string.non_zero_alert, Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    Toast.makeText(context, R.string.alphabet_error, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, R.string.edit_text_empty_message, Toast.LENGTH_SHORT)
+                        .show()
                 }
             } else {
-                Toast.makeText(context, R.string.edit_text_empty_message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, R.string.no_operation_chosen_error, Toast.LENGTH_SHORT)
+                    .show()
             }
         }
         return binding.root
@@ -114,11 +167,19 @@ class OperationFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(Constants.OPERATION.name, operation)
-        arguments?.putString(Constants.OPERATION.name, binding.operationButton.text.toString())
-        if (binding.number1EditText.text.isNotEmpty())
-            arguments?.putString(Constants.EDITTEXT1.name, binding.number1EditText.text.toString())
-        if (binding.number2EditText.text.isNotEmpty())
-            arguments?.putString(Constants.EDITTEXT2.name, binding.number2EditText.text.toString())
+        if (this::binding.isInitialized) {
+            arguments?.putString(Constants.OPERATION.name, binding.operationButton.text.toString())
+            if (binding.number1EditText.text.isNotEmpty())
+                arguments?.putString(
+                    Constants.EDITTEXT1.name,
+                    binding.number1EditText.text.toString()
+                )
+            if (binding.number2EditText.text.isNotEmpty())
+                arguments?.putString(
+                    Constants.EDITTEXT2.name,
+                    binding.number2EditText.text.toString()
+                )
+        }
     }
 
     private fun operation(a: Double, b: Double, operation: String): String {
@@ -167,12 +228,4 @@ class OperationFragment : Fragment() {
         else -> false
     }
 
-    private fun isNumber(string: String): Boolean {
-        var isNumber = true
-        for (char in string) {
-            if (char !in '0'..'9')
-                isNumber = false
-        }
-        return isNumber
-    }
 }

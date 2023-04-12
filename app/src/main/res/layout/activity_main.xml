@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:id="@+id/root_element_activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragment_holder"
+    <FrameLayout
+        android:id="@+id/fragment_a_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"/>
-</FrameLayout>
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"/>
+    <FrameLayout
+        android:id="@+id/fragment_b_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"/>
+</LinearLayout>

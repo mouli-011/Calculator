@@ -16,4 +16,5 @@
     <string name="undefined">Undefined</string>
     <string name="non_zero_alert">Anything divided by zero is undefined</string>
     <string name="alphabet_error">Enter Numbers Only</string>
+    <string name="no_operation_chosen_error">No Operation Chosen</string>
 </resources>

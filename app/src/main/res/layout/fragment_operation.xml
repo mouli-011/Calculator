@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:inputType="textPersonName"
+        android:inputType="number"
         android:id="@+id/number1_edit_text"
         style="@style/BorderedEditText"
         android:layout_marginBottom="20dp"
@@ -21,7 +21,7 @@
         app:layout_constraintVertical_chainStyle="packed" />
 
     <EditText
-        android:inputType="textPersonName"
+        android:inputType="number"
         android:id="@+id/number2_edit_text"
         style="@style/BorderedEditText"
         android:layout_marginTop="20dp"
@@ -38,6 +38,7 @@
     <Button
         android:id="@+id/operation_button"
         style="@style/BorderedButton"
+        android:text="@string/empty_string"
         android:layout_marginTop="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

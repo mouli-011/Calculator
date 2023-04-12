@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.LinearLayout
 import androidx.activity.OnBackPressedCallback
 import com.example.calculator.databinding.FragmentMainBinding
 import constants.Constants
@@ -79,11 +81,22 @@ class MainFragment : Fragment() {
                     getString(R.string.div)
                 )
             }
+            replaceFragment(operationSelected, R.id.fragment_b_container, OperationFragment())
             if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                replaceFragment(operationSelected, R.id.fragment_holder, OperationFragment())
-            }
-            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                replaceFragment(operationSelected, R.id.fragment_b_container, OperationFragment())
+                activity?.let {
+                    val fragmentBContainer: FrameLayout =
+                        activity?.findViewById(R.id.fragment_b_container)!!
+                    val fragmentBLayoutParams =
+                        fragmentBContainer.layoutParams as LinearLayout.LayoutParams
+                    val fragmentAContainer: FrameLayout =
+                        activity?.findViewById(R.id.fragment_a_container)!!
+                    val fragmentALayoutParams =
+                        fragmentAContainer.layoutParams as LinearLayout.LayoutParams
+                    fragmentALayoutParams.weight = 0f
+                    fragmentBLayoutParams.weight = 1f
+                    fragmentAContainer.layoutParams = fragmentALayoutParams
+                    fragmentBContainer.layoutParams = fragmentBLayoutParams
+                }
             }
         }
         with(binding) {
@@ -107,9 +120,6 @@ class MainFragment : Fragment() {
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragment.arguments = operationSelected
         fragmentTransaction.replace(container, fragment)
-        if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            fragmentTransaction.addToBackStack(null)
-        }
         fragmentTransaction.commit()
     }
 
