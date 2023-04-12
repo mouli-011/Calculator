@@ -244,5 +244,8 @@ class OperationFragment : Fragment() {
     private fun EditText.makeInaccessible() {
         isClickable = false
         isFocusable = false
+        setOnClickListener {
+            Toast.makeText(context, R.string.no_operation_chosen_error, Toast.LENGTH_SHORT).show()
+        }
     }
 }
