@@ -7,36 +7,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.LinearLayout
-import androidx.activity.OnBackPressedCallback
 import com.example.calculator.databinding.FragmentMainBinding
 import constants.Constants
 
 class MainFragment : Fragment() {
     private var viewChanged = false
     private lateinit var binding: FragmentMainBinding
-    private lateinit var onBackPressedCallback: OnBackPressedCallback
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentMainBinding.inflate(inflater)
         if (savedInstanceState != null) {
-            binding.resultTextView.text =
-                savedInstanceState.getString(Constants.RESULT.name).toString()
+            binding.resultTextView.text = savedInstanceState.getString(Constants.RESULT.name).toString()
             viewChanged = savedInstanceState.getBoolean(Constants.VIEWCHANGED.name)
         }
-        onBackPressedCallback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (viewChanged) {
-                    startingScreen()
-                } else {
-                    activity?.finish()
-                }
-            }
-        }
-        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, onBackPressedCallback)
+        setVisible()
         val fragmentManager = parentFragmentManager
         fragmentManager.setFragmentResultListener(
             Constants.RESULT.name,
@@ -51,7 +37,7 @@ class MainFragment : Fragment() {
         return binding.root
     }
 
-    private fun startingScreen() {
+    fun startingScreen() {
         viewChanged = false
         with(binding) {
             operationLayout.visibility = View.VISIBLE
@@ -61,6 +47,7 @@ class MainFragment : Fragment() {
     }
 
     private fun setListeners() {
+        val fragmentManager = parentFragmentManager
         val listener = OnClickListener {
             val operationSelected = Bundle()
             when (it) {
@@ -84,18 +71,13 @@ class MainFragment : Fragment() {
             replaceFragment(operationSelected, R.id.fragment_b_container, OperationFragment())
             if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 activity?.let {
-                    val fragmentBContainer: FrameLayout =
-                        activity?.findViewById(R.id.fragment_b_container)!!
-                    val fragmentBLayoutParams =
-                        fragmentBContainer.layoutParams as LinearLayout.LayoutParams
-                    val fragmentAContainer: FrameLayout =
-                        activity?.findViewById(R.id.fragment_a_container)!!
-                    val fragmentALayoutParams =
-                        fragmentAContainer.layoutParams as LinearLayout.LayoutParams
-                    fragmentALayoutParams.weight = 0f
-                    fragmentBLayoutParams.weight = 1f
-                    fragmentAContainer.layoutParams = fragmentALayoutParams
-                    fragmentBContainer.layoutParams = fragmentBLayoutParams
+                    val fragmentTransaction = fragmentManager.beginTransaction()
+                    val operationFragment = fragmentManager.findFragmentById(R.id.fragment_b_container)
+                    operationFragment?.let{
+                        fragmentTransaction.show(operationFragment)
+                    }
+                    fragmentTransaction.hide(this)
+                    fragmentTransaction.commit()
                 }
             }
         }
@@ -135,5 +117,18 @@ class MainFragment : Fragment() {
                 startingScreen()
             }
         }
+    }
+    private fun setVisible(){
+        val fragmentManager = parentFragmentManager
+       if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
+           if(this.isHidden){
+               val fragmentTransaction = fragmentManager.beginTransaction()
+               fragmentTransaction.show(this)
+               fragmentTransaction.commit()
+           }
+       }
+    }
+    fun getViewChanged(): Boolean{
+        return viewChanged
     }
 }
