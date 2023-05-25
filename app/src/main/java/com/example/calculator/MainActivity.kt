@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
                         if (operationFragment.isVisible) {
                             val fragmentTransaction = fragmentManager.beginTransaction()
                             if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                                mainFragment.startingScreen()
+                                //mainFragment.startingScreen()
                                 operationFragment.disableEditTextAndButton()
                                 fragmentTransaction.hide(operationFragment)
                                 fragmentTransaction.show(mainFragment)
@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
                             }
                         } else {
                             if (mainFragment.getViewChanged()) {
-                                mainFragment.startingScreen()
+                                mainFragment.dataSet.value = listOf(getString(R.string.add), getString(R.string.sub), getString(R.string.mul), getString(R.string.div))
                             } else {
                                 finish()
                             }

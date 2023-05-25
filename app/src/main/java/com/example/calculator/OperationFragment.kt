@@ -20,8 +20,8 @@ class OperationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentOperationBinding.inflate(inflater)
-        arguments?.getString(Constants.OPERATION.name)?.let {
-            binding.operationButton.text = arguments?.getString(Constants.OPERATION.name).toString()
+        arguments?.getString(Constants.Operation.message)?.let {
+            binding.operationButton.text = arguments?.getString(Constants.Operation.message).toString()
         }
         arguments = Bundle()
         operation = binding.operationButton.text.toString()
@@ -66,8 +66,8 @@ class OperationFragment : Fragment() {
                             number2.toInt(),
                             operation(number1, number2, operation)
                         )
-                        result.putString(Constants.RESULT.name, resultString)
-                        fragmentManager.setFragmentResult(Constants.RESULT.name, result)
+                        result.putString(Constants.Result.message, resultString)
+                        fragmentManager.setFragmentResult(Constants.Result.message, result)
                         disableEditTextAndButton()
                         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                             val mainFragment = fragmentManager.findFragmentById(R.id.fragment_a_container)
@@ -95,17 +95,17 @@ class OperationFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(Constants.OPERATION.name, operation)
+        outState.putString(Constants.Operation.message, operation)
         if (this::binding.isInitialized) {
-            arguments?.putString(Constants.OPERATION.name, binding.operationButton.text.toString())
+            arguments?.putString(Constants.Operation.message, binding.operationButton.text.toString())
             if (binding.number1EditText.text.isNotEmpty())
                 arguments?.putString(
-                    Constants.EDITTEXT1.name,
+                    Constants.Number1.message,
                     binding.number1EditText.text.toString()
                 )
             if (binding.number2EditText.text.isNotEmpty())
                 arguments?.putString(
-                    Constants.EDITTEXT2.name,
+                    Constants.Number2.message,
                     binding.number2EditText.text.toString()
                 )
         }

@@ -1,65 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout
-        android:id="@+id/operation_layout"
+    <data>
+
+    </data>
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="20dp"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/add_button"
-            style="@style/BorderedButton"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:text="@string/add" />
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/lazy_column_compose_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-        <Button
-            android:id="@+id/sub_button"
-            style="@style/BorderedButton"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:text="@string/sub" />
-
-        <Button
-            android:id="@+id/mul_button"
-            style="@style/BorderedButton"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:text="@string/mul" />
-
-        <Button
-            android:id="@+id/div_button"
-            style="@style/BorderedButton"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:text="@string/div" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/result_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical">
-
-
-        <TextView
-            android:id="@+id/resultTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp" />
-
-        <Button
-            android:id="@+id/reset_button"
-            style="@style/BorderedButton"
-            android:layout_marginTop="20dp"
-            android:text="@string/reset" />
-
-    </LinearLayout>
-</FrameLayout>
+    </FrameLayout>
+</layout>

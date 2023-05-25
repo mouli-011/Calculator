@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="primary_variant">#ffddb3</color>
+    <color name="primary_color">#825500</color>
+    <color name="secondary_color">#a58d6f</color>
+    <color name="tertiary_color">#83976e</color>
+    <color name="neutral_color">#978f88</color>
     <color name="grey">#A5A3A3</color>
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
