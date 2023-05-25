@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="dark_on_secondary">#3e2d16</color>
+    <color name="dark_secondary_variant">#56442a</color>
+    <color name ="dark_on_primary">#452b00</color>
+    <color name = "dark_primary_variant">#633f00</color>
+    <color name="dark_primary_color">#ffb951</color>
+    <color name = "dark_secondary_color">#ddc2a1</color>
+    <color name = "dark_tertiary_color">#b8cea1</color>
+    <color name="dark_neutral_color">#9c8f80</color>
     <color name="primary_variant">#ffddb3</color>
     <color name="primary_color">#825500</color>
     <color name="secondary_color">#a58d6f</color>
